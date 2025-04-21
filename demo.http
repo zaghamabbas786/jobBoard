@@ -1,0 +1,18 @@
+
+# POST http://localhost:3000/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "user123@example.com",
+#   "password": "password123"
+# }
+
+
+
+
+
+
+
+GET http://localhost:3000/users/all-users
+Content-Type : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxMjNAZXhhbXBsZS5jb20iLCJzdWIiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTI1MDgzMiwiZXhwIjoxNzQ1MjU0NDMyfQ.6_fsPDCwcMKa9_WDt_-mjd6v-gZ4Udow8bdI0iomg8g
