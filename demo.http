@@ -1,18 +1,69 @@
 
-# POST http://localhost:3000/auth/login
-# Content-Type: application/json
+POST http://localhost:3000/auth/login
+Content-Type: application/json
 
-# {
-#   "email": "user123@example.com",
-#   "password": "password123"
-# }
+{
+  "email": "user123@example.com",
+  "password": "password123"
+}
+
+##########
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxMjNAZXhhbXBsZS5jb20iLCJzdWIiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTQwMjQzNSwiZXhwIjoxNzQ1NDA2MDM1fQ.AqypLbIDz03XjC0-W1RD2xcb0qqsjCnlGfaXNwlrmGU
 
 
-
-
-
+########################
 
 
 GET http://localhost:3000/users/all-users
 Content-Type : application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxMjNAZXhhbXBsZS5jb20iLCJzdWIiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0NTI1MDgzMiwiZXhwIjoxNzQ1MjU0NDMyfQ.6_fsPDCwcMKa9_WDt_-mjd6v-gZ4Udow8bdI0iomg8g
+Authorization: {{token}}
+
+
+
+######### create job   ###############
+
+POST http://localhost:3000/jobs/create
+Content-Type : application/json
+Authorization: {{token}}
+
+{
+  "title": "zagham",
+  "description": "asdasdas   asd as d sa d as d as",
+  "location": "secraminto california",
+  "salary": "5000 $"
+}
+
+######### create jobs #######
+GET  http://localhost:3000/jobs/all
+Content-Type : application/json
+Authorization: {{token}}
+
+######### delete jobs #######
+DELETE   http://localhost:3000/jobs/3
+Content-Type : application/json
+Authorization: {{token}}
+
+######### create application #######
+POST http://localhost:3000/application/create
+Content-Type : application/json
+Authorization: {{token}}
+
+{
+  "jobId": 2,
+  "coverLetter": "asdasdasdasdasdasdas"
+}
+
+
+
+
+######### all application #######
+GET  http://localhost:3000/application/all
+Content-Type : application/json
+Authorization: {{token}}
+
+
+
+######### delete application #######
+DELETE   http://localhost:3000/application/6
+Content-Type : application/json
+Authorization: {{token}}

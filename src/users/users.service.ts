@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { promises } from 'dns';
 
 @Injectable()
 export class UsersService {
@@ -64,5 +65,16 @@ export class UsersService {
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.usersRepository.remove(user);
+  }
+
+  async updateAccessToken(id: number, accessToken: string): Promise<void> {
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    user.accessToken = accessToken;
+
+    this.usersRepository.save(user);
   }
 }
