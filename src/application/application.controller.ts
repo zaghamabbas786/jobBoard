@@ -20,7 +20,7 @@ export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
   @Post('/create')
-  create(@Body() createApplicationDto: CreateApplicationDto, @Request() req,) {
+  create(@Body() createApplicationDto: CreateApplicationDto, @Request() req) {
     const id = req.user.id;
     return this.applicationService.create(createApplicationDto, id);
   }

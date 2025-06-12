@@ -31,9 +31,9 @@ export class JobService {
 
   async update(id: number, updateJobDto: UpdateJobDto) {
     const job = await this.findOne(id);
-     if (!job) {
-       throw new NotFoundException('Job not found');
-     }
+    if (!job) {
+      throw new NotFoundException('Job not found');
+    }
     const updated = this.jobRepository.merge(job, updateJobDto);
     return await this.jobRepository.save(updated);
   }

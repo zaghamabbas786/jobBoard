@@ -16,11 +16,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     MailerModule.forRoot({
       transport: {
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
+        host: process.env.MAIL_HOST || 'sandbox.smtp.mailtrap.io',
+        port: process.env.MAIL_PORT || 2525,
         auth: {
-          user: process.env.MAIL_USER_NAME,
-          pass: process.env.MAIL_PASS,
+          user: process.env.MAIL_USER_NAME || '8718fdd6c06f18',
+          pass: process.env.MAIL_PASS || 'db6ac66abe968f',
         },
       },
       defaults: {
@@ -29,13 +29,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: process.env.DB_HOST || 'localhost',
       port: 5432,
-      username: 'root',
-      password: 'root',
-      database: 'jobboard',
-      autoLoadEntities: true,
-      synchronize: true,
+      username: process.env.USER_NAME || 'root',
+      password: process.env.PASSWORD || 'root',
+      database: process.env.DATABASE || 'jobboard',
+      autoLoadEntities: !!process.env.AUTO_LOAD_ENTITIES || true,
+      synchronize: !!process.env.SYNCHRONIZE || true,
     }),
     UsersModule,
     AuthModule,

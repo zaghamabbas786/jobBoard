@@ -1,4 +1,3 @@
-import { IsOptional } from 'class-validator';
 import { Application } from 'src/application/entities/application.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 

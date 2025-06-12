@@ -10,9 +10,23 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: jobboard
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest_app
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://root:root@postgres:5432/jobboard
+    command: npm run start:prod
 
 volumes:
   postgres_data:

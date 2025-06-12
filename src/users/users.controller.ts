@@ -8,7 +8,7 @@ import {
   UseGuards,
   Post,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from 'src/common/guards/roles/roles.guard';
 import { Public, Roles } from 'src/auth/roles.decorators';
@@ -19,7 +19,7 @@ import { JwtAuthGuard } from 'src/common/guards/roles/JwtAuthGuard';
 @UseGuards(RolesGuard, JwtAuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UserService) {}
 
   @Public()
   @Post('/create')
