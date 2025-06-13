@@ -9,27 +9,84 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    
     - name: Build Docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/job-board-nestjs:latest .
+    
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/job-board-nestjs:latest
+    
     - name: SSH and Deploy to EC2
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
+        timeout: 300s
+        command_timeout: 300s
         script: |
           cd /home/ubuntu/job-board
+          
+          echo "=== Deployment Started ==="
+          
+          # Function to retry commands
+          retry_command() {
+            local cmd="$1"
+            local max_attempts=3
+            local attempt=1
+            
+            while [ $attempt -le $max_attempts ]; do
+              echo "Attempt $attempt of $max_attempts: $cmd"
+              if eval "$cmd"; then
+                return 0
+              else
+                echo "Command failed, retrying in 10 seconds..."
+                sleep 10
+                ((attempt++))
+              fi
+            done
+            
+            echo "Command failed after $max_attempts attempts"
+            return 1
+          }
+          
+          # Pull latest image with retry
           echo "Pulling latest image for nestjs service..."
-          docker-compose pull nestjs
+          retry_command "docker-compose pull nestjs"
+          
+          # Stop containers
           echo "Stopping containers..."
-          docker-compose down
-          echo "Removing old images..."
-          docker image prune -f
+          docker-compose down || true
+          
+          # Clean up old images
+          echo "Cleaning up old images..."
+          docker image prune -f || true
+          
+          # Start containers
           echo "Starting containers with latest image..."
           docker-compose up -d --force-recreate
-          echo "Deployment completed!"
+          
+          # Wait for container to start
+          echo "Waiting for container to start..."
+          sleep 10
+          
+          # Check status
+          echo "=== Container Status ==="
           docker-compose ps
+          
+          # Check if app is responding
+          echo "=== Testing Application ==="
+          for i in {1..5}; do
+            if curl -f http://localhost:3000 2>/dev/null; then
+              echo "✅ Application is responding!"
+              break
+            else
+              echo "⏳ Waiting for application to start... ($i/5)"
+              sleep 5
+            fi
+          done
+          
+          echo "=== Deployment Completed ==="
